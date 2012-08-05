@@ -1,0 +1,39 @@
+'''
+Created on Apr 24, 2011
+
+@author: erik
+'''
+
+import matplotlib.pyplot as plt
+import math
+
+class Animation:
+    """ Class for animating a microGP experiment.
+    
+    An Animation instance is initialized with a microGP experiment instance.
+    When called the instance plots the target function, and then successively
+    plots the best match from each generation.
+    
+    """
+    
+    def __init__(self, experiment):
+        plt.ion()
+        self.target = experiment.target_func
+        self.domain = experiment.fitness_accuracy
+        self.best = experiment.best
+        
+    def __call__(self):
+        y_values = []
+        
+        for x in self.domain:
+            y_values.append(eval(self.target))
+        line, = plt.plot(self.domain, y_values)
+        plt.draw()
+        
+        line, = plt.plot(self.domain, self.domain)
+        for function in self.best:
+            y_values = []
+            for x in self.domain:
+                y_values.append(function([x]))
+            line.set_ydata(y_values)
+            plt.draw()
